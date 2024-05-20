@@ -39,9 +39,7 @@ class WordViewController: UIViewController, UITextFieldDelegate {
           
         designSearchTextField()
         designTermButtons()
-        
         designSearchButton()
-        
         designResultView()
          
     }
@@ -62,27 +60,32 @@ class WordViewController: UIViewController, UITextFieldDelegate {
         let tag = sender.tag
         let searchText = termButtons[tag].titleLabel?.text ?? ""
         searchTextField.text = searchText
-        
-        if let idx = keys.firstIndex(of: searchText) {
-            resultLabel.text = values[idx]
-        } else {
-            resultLabel.text = "검색 결과가 없습니다..."
+        resultLabel.text = "검색 결과가 없습니다..."
+        for key in keys {
+            if key.lowercased() == searchText.lowercased() {
+                if let idx = keys.firstIndex(of: searchText) {
+                    resultLabel.text = values[idx]
+                }
+            }
         }
     }
     
     // 배열로 검색 - 검색어를 keys에서 찾아 values값을 결과로
     func searchByArray() {
-        let searchText = searchTextField.text!
-        if let idx = keys.firstIndex(of: searchText) {
-            resultLabel.text = values[idx]
-        } else {
-            resultLabel.text = "검색 결과가 없습니다..."
+        let searchText = searchTextField.text!.lowercased()
+        resultLabel.text = "검색 결과가 없습니다..."
+        for key in keys {
+            if key.lowercased() == searchText {
+                if let idx = keys.firstIndex(of: searchText) {
+                    resultLabel.text = values[idx]
+                }
+            }
         }
     }
     
     // 사전으로 검색 - 검색어를 Dic에 넣어서
     func searchByDictionary() {
-        let searchText = searchTextField.text!
+        let searchText = searchTextField.text!.lowercased()
         if let result = searchDic[searchText] {
             resultLabel.text = result
         } else {
