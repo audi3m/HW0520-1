@@ -9,10 +9,11 @@ import UIKit
 
 class EmotionViewController: UIViewController {
     
-    @IBOutlet var barItemButton: UIBarButtonItem!
-    
     @IBOutlet var emotionButtons: [UIButton]!
     @IBOutlet var emotionLabels: [UILabel]!
+    
+    @IBOutlet var resetButton: UIBarButtonItem!
+    
     
     var count: [Int] = [0,0,0,0,0,0,0,0,0]
     let images: [String] = ["slime1", "slime2", "slime3",
@@ -24,8 +25,9 @@ class EmotionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        count = fetchCount()
         
-        barItemButton.tintColor = .black
+        resetButton.title = "Reset"
         
         designAllButtons()
         designAllLabels()
@@ -36,6 +38,7 @@ class EmotionViewController: UIViewController {
         let tag = sender.tag
         count[tag] += 1
         emotionLabels[tag].text = "\(emotions[tag]) \(count[tag])"
+        UserDefaults.standard.set(count, forKey: "emotionCount")
     }
     
     func designAllButtons() {
@@ -48,10 +51,32 @@ class EmotionViewController: UIViewController {
     
     func designAllLabels() {
         for i in 0...8 {
-            emotionLabels[i].text = "\(emotions[i]) 0"
+            emotionLabels[i].text = "\(emotions[i]) \(count[i])"
             emotionLabels[i].textAlignment = .center
             emotionLabels[i].textColor = .black
         }
     }
+    
+    func resetEmotionCount() {
+        count = [0,0,0,0,0,0,0,0,0]
+        for i in 0...8 {
+            emotionLabels[i].text = "\(emotions[i]) \(count[i])"
+        }
+    }
+    
+    func fetchCount() -> [Int] {
+        let fetchCount = UserDefaults.standard.object(forKey: "emotionCount") as? [Int]
+        return fetchCount ?? [0,0,0,0,0,0,0,0,0]
+    }
+    
+    @IBAction func resetButtonTapped(_ sender: UIBarButtonItem) {
+        resetEmotionCount()
+        UserDefaults.standard.set(count, forKey: "emotionCount")
+    }
+    
+    
+    
+    
+    
 
 }
